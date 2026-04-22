@@ -167,7 +167,7 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
         const res = await fetch("/api/chat/stream", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history }),
+          body: JSON.stringify({ content: text }),
         });
 
         if (!res.ok || !res.body) throw new Error("Stream failed");
@@ -175,20 +175,24 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let accumulated = "";
+        let buffer = "";
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split("\n");
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
           for (const line of lines) {
             if (line.startsWith("data: ")) {
-              const data = line.slice(6);
+              const data = line.slice(6).trim();
               if (data === "[DONE]") break;
               try {
                 const parsed = JSON.parse(data);
-                if (parsed.token) {
-                  accumulated += parsed.token;
+                // endpoint returns {type:"token", content:"..."}
+                const delta = parsed.content ?? parsed.token ?? null;
+                if (delta) {
+                  accumulated += delta;
                   setStreamContent(accumulated);
                 }
               } catch {

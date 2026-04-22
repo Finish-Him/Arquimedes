@@ -485,12 +485,26 @@ export default function Home() {
             >
               {/* Badges */}
               <div className="flex flex-wrap gap-2.5 mb-8">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/15 to-amber-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold shadow-lg shadow-yellow-500/5">
+                <a
+                  href="https://academy.manus.im"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Manus Academy — Top 1 Brazil"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/15 to-amber-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold shadow-lg shadow-yellow-500/5 hover:from-yellow-500/25 hover:to-amber-500/25 hover:border-yellow-500/50 transition-all cursor-pointer"
+                >
                   <Trophy className="h-4 w-4" /> {t.badge_top1}
-                </span>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold shadow-lg shadow-blue-500/5">
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
+                <a
+                  href="https://academy.manus.im"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Manus Academy — Top 8 Global"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold shadow-lg shadow-blue-500/5 hover:from-blue-500/25 hover:to-cyan-500/25 hover:border-blue-500/50 transition-all cursor-pointer"
+                >
                   <Award className="h-4 w-4" /> {t.badge_top8}
-                </span>
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 text-emerald-400 text-sm font-bold shadow-lg shadow-emerald-500/5">
                   <Globe className="h-4 w-4" /> {t.badge_remote}
                 </span>
@@ -692,13 +706,12 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          ABOUT & ACHIEVEMENTS SECTION
+          ABOUT SECTION
       ═══════════════════════════════════════════════════════════════════ */}
       <section id="about" className="py-24 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#0a1225] to-[#060d1b]" />
         <div className="container relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
-            {/* Left: About */}
+          <div className="max-w-3xl">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeLeft} transition={{ duration: 0.6 }}>
               <div className="flex items-center gap-3 mb-3">
                 <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-blue-500 to-transparent" />
@@ -724,7 +737,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 mb-8">
                 <p className="text-sm text-emerald-400 font-medium flex items-center gap-2">
                   <Target className="h-4 w-4" />
                   {t.availability}
@@ -732,7 +745,7 @@ export default function Home() {
               </div>
 
               {/* Cross-links */}
-              <div className="flex flex-wrap gap-3 mt-8">
+              <div className="flex flex-wrap gap-3">
                 <Button variant="outline" size="sm" className="border-slate-700/60 text-slate-400 hover:text-blue-400 hover:border-blue-500/40 gap-2 rounded-xl" onClick={() => scrollTo("stack")}>
                   <Code2 className="h-4 w-4" /> {t.section_stack}
                 </Button>
@@ -744,109 +757,7 @@ export default function Home() {
                 </Button>
               </div>
             </motion.div>
-
-            {/* Right: Achievements */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeRight} transition={{ duration: 0.6, delay: 0.15 }}>
-              <h3 className="text-xl font-display font-bold mb-8 text-slate-200 flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-yellow-400" />
-                {t.section_achievements}
-              </h3>
-              <div className="space-y-4">
-                {[
-                  { title: t.ach_manus_top1, desc: t.ach_manus_top1_desc, img: "/manus-storage/top1_manus_c14e2927.png", gradient: "from-yellow-500/20 to-amber-500/20", border: "border-yellow-500/30", icon: "🏆" },
-                  { title: t.ach_manus_top8, desc: t.ach_manus_top8_desc, img: "/manus-storage/top8_manus_global_19f36b79.jpg", gradient: "from-blue-500/20 to-cyan-500/20", border: "border-blue-500/30", icon: "🌍" },
-                  { title: t.ach_hf, desc: t.ach_hf_desc, img: null, gradient: "from-purple-500/15 to-violet-500/15", border: "border-purple-500/30", icon: "🤗" },
-                  { title: t.ach_langchain, desc: t.ach_langchain_desc, img: null, gradient: "from-green-500/15 to-emerald-500/15", border: "border-green-500/30", icon: "🦜" },
-                  { title: t.ach_anthropic, desc: t.ach_anthropic_desc, img: null, gradient: "from-orange-500/15 to-amber-500/15", border: "border-orange-500/30", icon: "🧠" },
-                  { title: t.ach_redhat, desc: t.ach_redhat_desc, img: null, gradient: "from-red-500/15 to-rose-500/15", border: "border-red-500/30", icon: "🎓" },
-                ].map((ach, i) => (
-                  <motion.div
-                    key={i}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUp}
-                    transition={{ duration: 0.3, delay: i * 0.08 }}
-                    className={`flex items-center gap-4 p-4 rounded-xl border ${ach.border} bg-gradient-to-r ${ach.gradient} backdrop-blur-sm hover:scale-[1.02] transition-transform cursor-default`}
-                  >
-                    {ach.img ? (
-                      <img src={ach.img} alt={ach.title} className="w-16 h-12 rounded-lg object-cover shrink-0 shadow-lg" />
-                    ) : (
-                      <div className="w-16 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 text-2xl">
-                        {ach.icon}
-                      </div>
-                    )}
-                    <div className="min-w-0">
-                      <div className="font-bold text-sm text-white truncate">{ach.title}</div>
-                      <div className="text-xs text-slate-400">{ach.desc}</div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          TECH STACK SECTION
-      ═══════════════════════════════════════════════════════════════════ */}
-      <section id="stack" className="py-24 relative">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663548238703/KFrFYg84PBb8CrQscNDMJb/section_stack_bg-ewFuaNugQWYQkes9ePKGzK.webp"
-            alt=""
-            className="w-full h-full object-cover opacity-8"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#060d1b]/90 to-[#060d1b]" />
-        </div>
-
-        <div className="container relative z-10">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} transition={{ duration: 0.6 }}>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-blue-500 to-transparent" />
-              <span className="text-blue-400 text-sm font-bold tracking-widest uppercase">Tech Stack</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-16">{t.section_stack}</h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {STACK_CATEGORIES.map((cat, i) => (
-              <motion.div
-                key={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                variants={scaleIn}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="group"
-              >
-                <div className="rounded-2xl border border-slate-800/60 bg-[#0c1629]/60 backdrop-blur-sm p-6 h-full hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-900/10 transition-all duration-300 hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-lg`}>
-                      <cat.icon className="h-5 w-5 text-white" />
-                    </div>
-                    <h3 className="font-display font-bold text-white">{cat.title[lang]}</h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {cat.items.map((item) => (
-                      <span key={item} className="px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 text-xs font-mono border border-slate-700/40 hover:border-blue-500/30 hover:text-blue-300 transition-colors cursor-default">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Cross-link */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} transition={{ duration: 0.4, delay: 0.4 }} className="mt-12 text-center">
-            <Button variant="outline" className="border-slate-700/60 text-slate-400 hover:text-blue-400 hover:border-blue-500/40 gap-2 rounded-xl" onClick={() => scrollTo("agents")}>
-              <Bot className="h-4 w-4" /> {t.nav_agents}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </motion.div>
         </div>
       </section>
 
@@ -931,6 +842,116 @@ export default function Home() {
                 <ExternalLink className="h-3 w-3" />
               </Button>
             </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          ACHIEVEMENTS SECTION
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section id="achievements" className="py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#0a1225] to-[#060d1b]" />
+        <div className="container relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} transition={{ duration: 0.6 }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-yellow-500 to-transparent" />
+              <span className="text-yellow-400 text-sm font-bold tracking-widest uppercase">Achievements</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-12">{t.section_achievements}</h2>
+          </motion.div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { title: t.ach_manus_top1, desc: t.ach_manus_top1_desc, img: "/manus-storage/top1_manus_c14e2927.png", gradient: "from-yellow-500/20 to-amber-500/20", border: "border-yellow-500/30", icon: "🏆" },
+              { title: t.ach_manus_top8, desc: t.ach_manus_top8_desc, img: "/manus-storage/top8_manus_global_19f36b79.jpg", gradient: "from-blue-500/20 to-cyan-500/20", border: "border-blue-500/30", icon: "🌍" },
+              { title: t.ach_hf, desc: t.ach_hf_desc, img: null, gradient: "from-purple-500/15 to-violet-500/15", border: "border-purple-500/30", icon: "🤗" },
+              { title: t.ach_langchain, desc: t.ach_langchain_desc, img: null, gradient: "from-green-500/15 to-emerald-500/15", border: "border-green-500/30", icon: "🦜" },
+              { title: t.ach_anthropic, desc: t.ach_anthropic_desc, img: null, gradient: "from-orange-500/15 to-amber-500/15", border: "border-orange-500/30", icon: "🧠" },
+              { title: t.ach_redhat, desc: t.ach_redhat_desc, img: null, gradient: "from-red-500/15 to-rose-500/15", border: "border-red-500/30", icon: "🎓" },
+            ].map((ach, i) => (
+              <motion.div
+                key={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                transition={{ duration: 0.3, delay: i * 0.08 }}
+                className={`flex items-center gap-4 p-4 rounded-xl border ${ach.border} bg-gradient-to-r ${ach.gradient} backdrop-blur-sm hover:scale-[1.02] transition-transform cursor-default`}
+              >
+                {ach.img ? (
+                  <img src={ach.img} alt={ach.title} className="w-16 h-12 rounded-lg object-cover shrink-0 shadow-lg" />
+                ) : (
+                  <div className="w-16 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 text-2xl">
+                    {ach.icon}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <div className="font-bold text-sm text-white truncate">{ach.title}</div>
+                  <div className="text-xs text-slate-400">{ach.desc}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          TECH STACK SECTION
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section id="stack" className="py-24 relative">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663548238703/KFrFYg84PBb8CrQscNDMJb/section_stack_bg-ewFuaNugQWYQkes9ePKGzK.webp"
+            alt=""
+            className="w-full h-full object-cover opacity-8"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#060d1b]/90 to-[#060d1b]" />
+        </div>
+
+        <div className="container relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} transition={{ duration: 0.6 }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-blue-500 to-transparent" />
+              <span className="text-blue-400 text-sm font-bold tracking-widest uppercase">Tech Stack</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-16">{t.section_stack}</h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STACK_CATEGORIES.map((cat, i) => (
+              <motion.div
+                key={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={scaleIn}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="group"
+              >
+                <div className="rounded-2xl border border-slate-800/60 bg-[#0c1629]/60 backdrop-blur-sm p-6 h-full hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-900/10 transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-lg`}>
+                      <cat.icon className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="font-display font-bold text-white">{cat.title[lang]}</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {cat.items.map((item) => (
+                      <span key={item} className="px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 text-xs font-mono border border-slate-700/40 hover:border-blue-500/30 hover:text-blue-300 transition-colors cursor-default">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Cross-link */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} transition={{ duration: 0.4, delay: 0.4 }} className="mt-12 text-center">
+            <Button variant="outline" className="border-slate-700/60 text-slate-400 hover:text-blue-400 hover:border-blue-500/40 gap-2 rounded-xl" onClick={() => scrollTo("agents")}>
+              <Bot className="h-4 w-4" /> {t.nav_agents}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </motion.div>
         </div>
       </section>
