@@ -2,12 +2,61 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Bot, Package, Scale, Send, Mic, MicOff,
-  Sparkles, Globe, ChevronDown, RotateCcw, ExternalLink
+  ArrowLeft, Bot, Package, Scale, Send,
+  Sparkles, Globe, RotateCcw, ExternalLink, Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Streamdown } from "streamdown";
+
+// ─── Typing indicator component ──────────────────────────────────────────────
+function TypingIndicator({ agentName, agentAvatar, gradient }: {
+  agentName: string;
+  agentAvatar: string;
+  gradient: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.2 }}
+      className="flex justify-start gap-3"
+    >
+      <div className="relative flex-shrink-0">
+        <img src={agentAvatar} alt={agentName} className="w-8 h-8 rounded-xl object-cover mt-1" />
+        {/* Pulsing ring around avatar */}
+        <motion.div
+          className={`absolute -inset-1 rounded-xl bg-gradient-to-r ${gradient} opacity-40`}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.15, 0.4] }}
+          transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
+        />
+      </div>
+      <div className="rounded-2xl rounded-bl-sm px-4 py-3 bg-[#0c1629]/80 border border-slate-800/60 flex items-center gap-3">
+        {/* Three dots */}
+        <div className="flex items-center gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className={`w-2 h-2 rounded-full bg-gradient-to-r ${gradient}`}
+              animate={{ y: [0, -5, 0], opacity: [0.6, 1, 0.6] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.8,
+                delay: i * 0.18,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+        {/* Label */}
+        <span className="text-xs text-slate-500 font-medium select-none">
+          {agentName} is thinking…
+        </span>
+      </div>
+    </motion.div>
+  );
+}
 
 // ─── Agent definitions ───────────────────────────────────────────────────────
 const AGENTS = [
@@ -233,25 +282,41 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
           </div>
         ))}
 
-        {/* Streaming message */}
-        {isLoading && (
-          <div className="flex justify-start gap-3">
-            <img src={agent.avatar} alt={agent.name} className="w-8 h-8 rounded-xl object-cover flex-shrink-0 mt-1" />
-            <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 text-sm bg-[#0c1629]/80 border border-slate-800/60 text-slate-200">
-              {streamContent ? (
-                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:rounded">
+        {/* Typing indicator — shown while waiting for first token */}
+        <AnimatePresence>
+          {isLoading && !streamContent && (
+            <TypingIndicator
+              agentName={agent.name}
+              agentAvatar={agent.avatar}
+              gradient={agent.gradient}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Streaming content — shown once tokens start arriving */}
+        <AnimatePresence>
+          {isLoading && streamContent && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex justify-start gap-3"
+            >
+              <img src={agent.avatar} alt={agent.name} className="w-8 h-8 rounded-xl object-cover flex-shrink-0 mt-1" />
+              <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 text-sm bg-[#0c1629]/80 border border-slate-800/60 text-slate-200">
+                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:rounded prose-a:text-blue-400">
                   <Streamdown>{streamContent}</Streamdown>
                 </div>
-              ) : (
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+                {/* Blinking cursor at end of stream */}
+                <motion.span
+                  className="inline-block w-0.5 h-3.5 bg-slate-400 ml-0.5 align-middle"
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div ref={bottomRef} />
       </div>
@@ -285,9 +350,13 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
             size="sm"
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isLoading}
-            className={`bg-gradient-to-r ${agent.gradient} text-white border-0 h-[42px] px-4 rounded-xl shadow-lg disabled:opacity-40`}
+            className={`bg-gradient-to-r ${agent.gradient} text-white border-0 h-[42px] px-4 rounded-xl shadow-lg disabled:opacity-60 transition-all`}
           >
-            <Send className="h-4 w-4" />
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
           </Button>
         </div>
         <p className="text-xs text-slate-600 mt-1.5 text-center">
