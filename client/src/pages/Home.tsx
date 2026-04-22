@@ -567,7 +567,7 @@ export default function Home() {
                     {t.whatsapp}
                   </Button>
                 </a>
-                <a href="/manus-storage/Moises_Costa_CV_e64ae4d4.pdf" download="Moises_Costa_CV.pdf">
+                <a href="/manus-storage/Moises_Costa_CV_final_794c1e54.pdf" download="Moises_Costa_CV.pdf">
                   <Button size="lg" className="bg-blue-600/20 hover:bg-blue-600/35 text-blue-300 hover:text-blue-200 gap-2.5 text-base px-7 py-5 rounded-xl font-bold border border-blue-500/30 shadow-lg">
                     <Download className="h-5 w-5" />
                     {t.cta_download}
