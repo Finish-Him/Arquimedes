@@ -87,3 +87,16 @@ export const userProgress = mysqlTable("user_progress", {
 
 export type UserProgress = typeof userProgress.$inferSelect;
 export type InsertUserProgress = typeof userProgress.$inferInsert;
+
+// Contact leads (formulário de contato da Home)
+export const contactLeads = mysqlTable("contact_leads", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  message: text("message").notNull(),
+  source: varchar("source", { length: 64 }).default("home_form"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ContactLead = typeof contactLeads.$inferSelect;
+export type InsertContactLead = typeof contactLeads.$inferInsert;

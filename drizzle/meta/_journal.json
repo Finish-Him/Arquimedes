@@ -15,6 +15,13 @@
       "when": 1776846087427,
       "tag": "0001_mighty_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1776864730518,
+      "tag": "0002_absent_ken_ellis",
+      "breakpoints": true
     }
   ]
 }

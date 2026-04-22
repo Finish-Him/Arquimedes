@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Link } from "wouter";
 import {
@@ -278,10 +279,123 @@ const LINKS = [
   { label: "WhatsApp", href: "https://wa.me/5521990741351", icon: Phone, desc: "+55 21 99074-1351" },
 ];
 
-// ─── Sections for scroll-spy ─────────────────────────────────────────────────
-const SECTIONS = ["agents", "about", "stack", "career", "links"];
+// ─── Contact Section Component ───────────────────────────────────────────────────────────────────
+function ContactSection({ lang }: { lang: Lang }) {
+  const t = T[lang];
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const submitContact = trpc.contact.submit.useMutation({
+    onSuccess: () => {
+      setStatus("success");
+      setForm({ name: "", email: "", message: "" });
+      window.gtag?.("event", "lead_form_submit", { form_name: "contact_home" });
+    },
+    onError: (err: { message?: string }) => {
+      setStatus("error");
+      setErrorMsg(err.message || "Something went wrong. Please try again.");
+    },
+  });
 
-// ─── Animation variants ──────────────────────────────────────────────────────
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
+    setStatus("loading");
+    setErrorMsg("");
+    submitContact.mutate(form);
+  };
+
+  const contactLabels = {
+    pt: { title: "Entre em Contato", sub: "Vamos conversar sobre seu próximo projeto", name: "Nome", email: "E-mail", message: "Mensagem", placeholder_msg: "Descreva seu projeto ou oportunidade...", send: "Enviar Mensagem", sending: "Enviando...", success_title: "Mensagem enviada!", success_msg: "Obrigado pelo contato. Responderei em breve.", error_title: "Erro ao enviar" },
+    en: { title: "Get In Touch", sub: "Let's talk about your next project", name: "Name", email: "Email", message: "Message", placeholder_msg: "Describe your project or opportunity...", send: "Send Message", sending: "Sending...", success_title: "Message sent!", success_msg: "Thanks for reaching out. I'll get back to you shortly.", error_title: "Error sending" },
+    es: { title: "Contáctame", sub: "Hablemos sobre tu próximo proyecto", name: "Nombre", email: "Correo", message: "Mensaje", placeholder_msg: "Describe tu proyecto u oportunidad...", send: "Enviar Mensaje", sending: "Enviando...", success_title: "¡Mensaje enviado!", success_msg: "Gracias por contactarme. Te responderé pronto.", error_title: "Error al enviar" },
+  };
+  const ct = contactLabels[lang];
+
+  return (
+    <section id="contact" className="py-24 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/10 to-transparent pointer-events-none" />
+      <div className="container relative z-10">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-blue-500 to-transparent" />
+            <span className="text-blue-400 text-sm font-bold tracking-widest uppercase">Contact</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-4">{ct.title}</h2>
+          <p className="text-slate-400 mb-10">{ct.sub}</p>
+
+          {status === "success" ? (
+            <div className="p-8 rounded-2xl border border-green-500/30 bg-green-500/10 text-center">
+              <div className="text-4xl mb-3">✅</div>
+              <h3 className="text-xl font-bold text-green-400 mb-2">{ct.success_title}</h3>
+              <p className="text-slate-400">{ct.success_msg}</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">{ct.name} *</label>
+                  <input
+                    type="text"
+                    required
+                    minLength={2}
+                    value={form.name}
+                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    placeholder="Moises Costa"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">{ct.email} *</label>
+                  <input
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="recruiter@company.com"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{ct.message} *</label>
+                <textarea
+                  required
+                  minLength={10}
+                  rows={5}
+                  value={form.message}
+                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  placeholder={ct.placeholder_msg}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all resize-none"
+                />
+              </div>
+              {status === "error" && (
+                <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 text-sm">
+                  <strong>{ct.error_title}:</strong> {errorMsg}
+                </div>
+              )}
+              <Button
+                type="submit"
+                disabled={status === "loading"}
+                className="w-full h-14 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-base font-bold rounded-xl border-0 shadow-2xl shadow-blue-600/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+              >
+                {status === "loading" ? (
+                  <><span className="animate-spin mr-2">↻</span>{ct.sending}</>
+                ) : (
+                  <>{ct.send} →</>
+                )}
+              </Button>
+            </form>
+          )}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Sections for scroll-spy ────────────────────────────────────────────────────────────────────
+const SECTIONS = ["agents", "about", "stack", "career", "links"];
+// ─── Animation variants ────────────────────────────────────────────────────────────────────
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 const fadeLeft = { hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0 } };
 const fadeRight = { hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0 } };
@@ -492,33 +606,6 @@ export default function Home() {
               variants={fadeLeft}
               transition={{ duration: 0.7 }}
             >
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2.5 mb-8">
-                <a
-                  href="https://academy.manus.im"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Manus Academy — Top 1 Brazil"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/15 to-amber-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold shadow-lg shadow-yellow-500/5 hover:from-yellow-500/25 hover:to-amber-500/25 hover:border-yellow-500/50 transition-all cursor-pointer"
-                >
-                  <Trophy className="h-4 w-4" /> {t.badge_top1}
-                  <ExternalLink className="h-3 w-3 opacity-60" />
-                </a>
-                <a
-                  href="https://academy.manus.im"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Manus Academy — Top 8 Global"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold shadow-lg shadow-blue-500/5 hover:from-blue-500/25 hover:to-cyan-500/25 hover:border-blue-500/50 transition-all cursor-pointer"
-                >
-                  <Award className="h-4 w-4" /> {t.badge_top8}
-                  <ExternalLink className="h-3 w-3 opacity-60" />
-                </a>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 text-emerald-400 text-sm font-bold shadow-lg shadow-emerald-500/5">
-                  <Globe className="h-4 w-4" /> {t.badge_remote}
-                </span>
-              </div>
-
               {/* Name with glow */}
               <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-display font-extrabold leading-[1.05] mb-3 tracking-tight">
                 <span className="relative">
@@ -740,7 +827,33 @@ export default function Home() {
                 <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-blue-500 to-transparent" />
                 <span className="text-blue-400 text-sm font-bold tracking-widest uppercase">About</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-8">{t.section_about}</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold mb-6">{t.section_about}</h2>
+              {/* Badges moved from hero */}
+              <div className="flex flex-wrap gap-2.5 mb-8">
+                <a
+                  href="https://academy.manus.im"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Manus Academy — Top 1 Brazil"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/15 to-amber-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold shadow-lg shadow-yellow-500/5 hover:from-yellow-500/25 hover:to-amber-500/25 hover:border-yellow-500/50 transition-all cursor-pointer"
+                >
+                  <Trophy className="h-4 w-4" /> {t.badge_top1}
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
+                <a
+                  href="https://academy.manus.im"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Manus Academy — Top 30 Global"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold shadow-lg shadow-blue-500/5 hover:from-blue-500/25 hover:to-cyan-500/25 hover:border-blue-500/50 transition-all cursor-pointer"
+                >
+                  <Award className="h-4 w-4" /> {t.badge_top8}
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 text-emerald-400 text-sm font-bold shadow-lg shadow-emerald-500/5">
+                  <Globe className="h-4 w-4" /> {t.badge_remote}
+                </span>
+              </div>
               <p className="text-slate-300 text-lg leading-relaxed mb-8">{t.about_text}</p>
 
               <div className="space-y-4 mb-8">
@@ -1019,6 +1132,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          CONTACT FORM SECTION
+      ═══════════════════════════════════════════════════════════════════ */}
+      <ContactSection lang={lang} />
 
       {/* ═══════════════════════════════════════════════════════════════════
           FOOTER

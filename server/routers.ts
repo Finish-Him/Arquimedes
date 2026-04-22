@@ -9,6 +9,7 @@ import {
   getAllTopics, getTopicBySlug, getExercisesByTopic, getExerciseById,
   createChatSession, getUserChatSessions, getChatSessionById,
   addChatMessage, getSessionMessages, getUserProgress, upsertUserProgress,
+  saveContactLead,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -290,6 +291,32 @@ const ttsRouter = router({
     }),
 });
 
+// ─── Contact Router ───
+const contactRouter = router({
+  submit: publicProcedure
+    .input(z.object({
+      name: z.string().min(2).max(128),
+      email: z.string().email(),
+      message: z.string().min(10).max(2000),
+    }))
+    .mutation(async ({ input }) => {
+      await saveContactLead({
+        name: input.name,
+        email: input.email,
+        message: input.message,
+        source: "home_form",
+      });
+
+      // Notify owner
+      notifyOwner({
+        title: `New contact from ${input.name}`,
+        content: `**From:** ${input.name} <${input.email}>\n\n**Message:**\n${input.message}`,
+      }).catch(() => {});
+
+      return { success: true };
+    }),
+});
+
 // ─── Image Generation Router ───
 const imageRouter = router({
   generate: protectedProcedure
@@ -323,6 +350,7 @@ export const appRouter = router({
   progress: progressRouter,
   tts: ttsRouter,
   image: imageRouter,
+  contact: contactRouter,
 });
 
 export type AppRouter = typeof appRouter;

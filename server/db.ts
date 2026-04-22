@@ -7,6 +7,7 @@ import {
   chatSessions, InsertChatSession,
   chatMessages, InsertChatMessage,
   userProgress, InsertUserProgress,
+  contactLeads, InsertContactLead,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -152,6 +153,13 @@ export async function getUserProgress(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(userProgress).where(eq(userProgress.userId, userId));
+}
+
+// ─── Contact Leads ───
+export async function saveContactLead(lead: InsertContactLead) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(contactLeads).values(lead);
 }
 
 export async function upsertUserProgress(data: { userId: number; topicId: number; correct: boolean }) {
