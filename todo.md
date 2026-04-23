@@ -175,4 +175,14 @@
 - [x] Seção Links (final): expandir com Download CV, Email, todos os links sociais em cards visuais
 - [x] Botão Blog: manter na navbar e adicionar CTA de redirecionamento para Blog na seção final
 - [x] Atualizar testes E2E para refletir nova estrutura (13 testes passando)
-- [ ] Salvar checkpoint v2.15
+- [x] Salvar checkpoint v2.15
+
+## Fase 16: Aumentar janela de chat em /agents
+
+- [x] Grid 4 colunas: chat ocupa 3/4, painel info ocupa 1/4
+- [x] Altura do chat: calc(100vh - 175px) — mais espaço vertical
+- [x] Fonte das mensagens: text-base (16px) em vez de text-sm (14px)
+- [x] Chips de sugestão: 2 colunas, padding maior, texto text-sm
+- [x] Input e botões: altura 48px, fonte base
+- [x] Painel de info: compactado (avatar menor, texto menor)
+- [x] Salvar checkpoint v2.16

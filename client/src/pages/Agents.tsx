@@ -309,13 +309,13 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
               <img src={agent.avatar} alt={agent.name} className="relative w-20 h-20 rounded-2xl object-cover shadow-xl" />
             </div>
             <h3 className="text-white font-display font-bold text-lg mb-1">{agent.name}</h3>
-            <p className="text-slate-400 text-sm mb-6 max-w-xs">{agent.tagline}</p>
-            <div className="grid grid-cols-1 gap-2 w-full max-w-xs">
+            <p className="text-slate-400 text-sm mb-6 max-w-sm">{agent.tagline}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
               {agent.suggestedPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => sendMessage(prompt)}
-                  className={`text-left px-3 py-2 rounded-xl bg-white/5 border border-slate-700/40 text-slate-300 text-xs hover:bg-white/10 transition-all`}
+                  className={`text-left px-4 py-3 rounded-xl bg-white/5 border border-slate-700/40 text-slate-300 text-sm hover:bg-white/10 transition-all`}
                 >
                   {prompt}
                 </button>
@@ -329,13 +329,13 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
             {msg.role === "assistant" && (
               <img src={agent.avatar} alt={agent.name} className="w-8 h-8 rounded-xl object-cover flex-shrink-0 mt-1" />
             )}
-            <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+            <div className={`max-w-[80%] rounded-2xl px-5 py-3.5 text-base leading-relaxed ${
               msg.role === "user"
                 ? `bg-gradient-to-br ${agent.gradient} text-white rounded-br-sm`
                 : "bg-[#0c1629]/80 border border-slate-800/60 text-slate-200 rounded-bl-sm"
             }`}>
               {msg.role === "assistant" ? (
-                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-headings:my-2 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:rounded prose-a:text-blue-400">
+                <div className="prose prose-invert prose-base max-w-none prose-p:my-1.5 prose-headings:my-2 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1.5 prose-code:rounded prose-a:text-blue-400 prose-li:my-0.5">
                   <Streamdown>{msg.content}</Streamdown>
                 </div>
               ) : msg.content}
@@ -364,8 +364,8 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
               className="flex justify-start gap-3"
             >
               <img src={agent.avatar} alt={agent.name} className="w-8 h-8 rounded-xl object-cover flex-shrink-0 mt-1" />
-              <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 text-sm bg-[#0c1629]/80 border border-slate-800/60 text-slate-200">
-                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1 prose-code:rounded prose-a:text-blue-400">
+              <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-5 py-3.5 text-base bg-[#0c1629]/80 border border-slate-800/60 text-slate-200">
+                <div className="prose prose-invert prose-base max-w-none prose-p:my-1.5 prose-code:text-cyan-300 prose-code:bg-slate-800/80 prose-code:px-1.5 prose-code:rounded prose-a:text-blue-400 prose-li:my-0.5">
                   <Streamdown>{streamContent}</Streamdown>
                 </div>
                 {/* Blinking cursor at end of stream */}
@@ -393,7 +393,7 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
               onKeyDown={handleKeyDown}
               placeholder={agent.placeholder}
               rows={1}
-              className="resize-none bg-slate-800/60 border-slate-700/60 text-slate-200 placeholder-slate-500 focus:border-blue-500/60 rounded-xl text-sm min-h-[42px] max-h-[120px] pr-2"
+              className="resize-none bg-slate-800/60 border-slate-700/60 text-slate-200 placeholder-slate-500 focus:border-blue-500/60 rounded-xl text-base min-h-[48px] max-h-[140px] pr-2"
               style={{ height: "auto" }}
             />
           </div>
@@ -402,7 +402,7 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
               size="sm"
               variant="outline"
               onClick={reset}
-              className="border-slate-700/60 text-slate-500 hover:text-white h-[42px] px-2.5 rounded-xl"
+              className="border-slate-700/60 text-slate-500 hover:text-white h-[48px] px-3 rounded-xl"
               title="Clear conversation"
             >
               <RotateCcw className="h-3.5 w-3.5" />
@@ -412,7 +412,7 @@ function AgentChat({ agent }: { agent: typeof AGENTS[0] }) {
             size="sm"
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isLoading}
-            className={`bg-gradient-to-r ${agent.gradient} text-white border-0 h-[42px] px-4 rounded-xl shadow-lg disabled:opacity-60 transition-all`}
+            className={`bg-gradient-to-r ${agent.gradient} text-white border-0 h-[48px] px-5 rounded-xl shadow-lg disabled:opacity-60 transition-all`}
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -492,10 +492,10 @@ export default function Agents() {
       </div>
 
       {/* ── Main content ────────────────────────────────────────────────── */}
-      <div className="flex-1 container py-6">
-        <div className="grid lg:grid-cols-3 gap-6 h-full" style={{ minHeight: "calc(100vh - 200px)" }}>
+      <div className="flex-1 container py-4">
+        <div className="grid lg:grid-cols-4 gap-5 h-full" style={{ minHeight: "calc(100vh - 180px)" }}>
 
-          {/* Left: Agent info panel */}
+          {/* Left: Agent info panel — compact sidebar */}
           <div className="lg:col-span-1">
             <AnimatePresence mode="wait">
               <motion.div
@@ -509,35 +509,35 @@ export default function Agents() {
                 {/* Top gradient bar */}
                 <div className={`h-1.5 w-full bg-gradient-to-r ${agent.gradient}`} />
 
-                <div className="p-6">
-                  {/* Avatar */}
-                  <div className="relative mb-5">
+                <div className="p-4">
+                  {/* Avatar — smaller to save space */}
+                  <div className="relative mb-4">
                     <div className={`absolute -inset-2 bg-gradient-to-r ${agent.gradient} rounded-2xl blur opacity-20`} />
                     <img
                       src={agent.avatar}
                       alt={agent.name}
-                      className="relative w-full max-w-[200px] mx-auto aspect-square rounded-2xl object-cover shadow-2xl border border-slate-700/40"
+                      className="relative w-full max-w-[140px] mx-auto aspect-square rounded-2xl object-cover shadow-2xl border border-slate-700/40"
                     />
                   </div>
 
                   {/* Name & tagline */}
-                  <h2 className="text-xl font-display font-extrabold text-white mb-1">{agent.name}</h2>
-                  <p className={`text-sm font-semibold mb-3 ${agent.textColor}`}>{agent.tagline}</p>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-5">{agent.description}</p>
+                  <h2 className="text-lg font-display font-extrabold text-white mb-1">{agent.name}</h2>
+                  <p className={`text-xs font-semibold mb-2 ${agent.textColor}`}>{agent.tagline}</p>
+                  <p className="text-slate-400 text-xs leading-relaxed mb-4">{agent.description}</p>
 
                   {/* Stack tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
+                  <div className="flex flex-wrap gap-1 mb-4">
                     {agent.stack.map((tech) => (
-                      <span key={tech} className="px-2 py-0.5 rounded-md bg-white/5 text-slate-400 text-xs border border-slate-700/40 font-mono">
+                      <span key={tech} className="px-1.5 py-0.5 rounded-md bg-white/5 text-slate-400 text-[10px] border border-slate-700/40 font-mono">
                         {tech}
                       </span>
                     ))}
                   </div>
 
                   {/* Status badge */}
-                  <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border ${agent.border} ${agent.activeBg} mb-4`}>
+                  <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border ${agent.border} ${agent.activeBg} mb-3`}>
                     <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${agent.gradient} animate-pulse`} />
-                    <span className={`text-xs font-semibold ${agent.textColor}`}>Online · Ready to chat</span>
+                    <span className={`text-xs font-semibold ${agent.textColor}`}>Online · Ready</span>
                   </div>
 
                   {/* CTA */}
@@ -555,8 +555,8 @@ export default function Agents() {
             </AnimatePresence>
           </div>
 
-          {/* Right: Chat panel */}
-          <div className="lg:col-span-2">
+          {/* Right: Chat panel — wider (3/4 of grid) */}
+          <div className="lg:col-span-3">
             <AnimatePresence mode="wait">
               <motion.div
                 key={agent.id}
@@ -565,7 +565,7 @@ export default function Agents() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
                 className="rounded-2xl border border-slate-800/60 bg-[#0c1629]/60 backdrop-blur-sm overflow-hidden flex flex-col"
-                style={{ height: "calc(100vh - 220px)", minHeight: "500px" }}
+                style={{ height: "calc(100vh - 175px)", minHeight: "560px" }}
               >
                 {/* Chat header */}
                 <div className={`flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#060d1b]/40`}>
